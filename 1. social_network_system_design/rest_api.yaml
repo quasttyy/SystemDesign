@@ -135,6 +135,94 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  
+  /friends/{id}:            
+    post:
+      tags:
+        - friends
+      summary: Добавить пользователя в друзья
+      operationId: addFriend
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: Заявка в друзья успешно отправлена
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Пользователь не найден
+        default:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - friends
+      summary: Удалить пользователя из друзей
+      operationId: delFriend
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: Пользователь удален из друзей
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Пользователь не найден
+        default:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    
+  /users/{id}/friends:
+    get:
+      tags:
+        - friends
+      summary: Получение списка друзей пользователя
+      operationId: getUserFriends
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: Список друзей пользователя найден
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Список друзей пользователя не найден
+        default:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 components:
   schemas:
@@ -187,6 +275,8 @@ components:
         password:
           type: string
           example: 12345
+  
+  
 
     UserCreatedResp:
       type: object
