@@ -1,0 +1,208 @@
+openapi: 3.0.4
+info:
+  title: REST API, реализующее ключевые функции социальной сети ВКонтакте
+  description: Домашнее задание с курса System Design 
+  version: 1.0.0
+servers:
+  - url: https://api.notvk.com/
+tags:
+  - name: users
+    description: Пользователи
+  - name: friends
+    description: Друзья
+  - name: feed
+    description: Лента и посты
+  - name: chats
+    description: Диалоги
+paths:
+  /users:
+    get:
+      tags:
+        - users
+      summary: Получение списка пользователей
+      operationId: getUsers
+      responses:
+        '200':
+          description: Список пользователей найден
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Список пользователей не найден
+        default:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+                
+    post:
+      tags:
+        - users
+      summary: Добавление нового пользователя
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: Пользователь успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreatedResp'
+        '400':
+          description: Некорректный запрос
+        '422':
+          description: Ошибка валидации данных
+        default:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Получение конкретного пользователя
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+            example: 10
+        
+      responses:
+        '200':
+          description: Пользователь найден
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Пользователь не найден
+        default:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+                
+    put:
+      tags:
+        - users
+      summary: Редактирование анкеты пользователя
+      operationId: editUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+            example: 10
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        
+      responses:
+        '200':
+          description: Данные пользователя успешно изменены
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Пользователь не найден
+        default:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        firstname:
+          type: string
+          description: Имя пользователя
+          example: Алексей
+        lastname:
+          type: string
+          description: Фамилия пользователя
+          example: Иванов
+        age:
+          type: integer
+          format: int32
+          example: 24
+        birthdate:
+          type: string
+          format: date-time
+
+    UserCreate:
+      type: object
+      required:
+        - firstname
+        - lastname
+        - password
+      
+      properties:
+        firstname:
+          type: string
+          description: Имя пользователя
+          example: Алексей
+        lastname:
+          type: string
+          description: Фамилия пользователя
+          example: Иванов
+        age:
+          type: integer
+          format: int32
+          example: 24
+        birthdate:
+          type: string
+          format: date-time
+        password:
+          type: string
+          example: 12345
+
+    UserCreatedResp:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+    
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
