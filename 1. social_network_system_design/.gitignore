@@ -1,0 +1,45 @@
+# === macOS ===
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Trashes
+.DS_Store?
+.Spotlight-V100
+.fseventsd
+
+# === Go ===
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of go build
+*.out
+*.o
+*.a
+
+# Vendor dependencies (if not committed)
+vendor/
+
+# Go workspace
+go.work
+go.work.sum
+
+# === IDEs ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === Logs ===
+*.log
+*.out
+*.err
+
+# === Misc ===
+.env
